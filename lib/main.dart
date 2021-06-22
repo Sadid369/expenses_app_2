@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
               ),
         ),
       ),
-      title: 'Personal Expenses 2',
+      title: 'Personal Expenses 2-',
       home: MyHomePage(),
     );
   }
