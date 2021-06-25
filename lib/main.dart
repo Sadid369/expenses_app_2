@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:expense_app_2/models/transaction.dart';
+import 'package:expense_app_2/widgets/chart.dart';
 import 'package:expense_app_2/widgets/new_transaction.dart';
 import 'package:expense_app_2/widgets/transaction_list.dart';
 
@@ -13,14 +14,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        primarySwatch: Colors.lightGreen,
-        accentColor: Colors.green,
+        primarySwatch: Colors.red,
+        //accentColor: Colors.green,
         fontFamily: 'QuickSand',
         textTheme: ThemeData.light().textTheme.copyWith(
               title: TextStyle(
                 fontFamily: 'OpenSans',
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
+              ),
+              button: TextStyle(
+                color: Colors.white,
               ),
             ),
         appBarTheme: AppBarTheme(
@@ -54,6 +58,16 @@ class _MyHomePageState extends State<MyHomePage> {
     //     amount: 16.53,
     //     date: DateTime.now()),
   ];
+  List<Transaction> get _recentTransaction {
+    return _userTransaction.where((tx) {
+      return tx.date.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
+
   void _addNewTransaction(String txTitle, double txAmount) {
     final newTx = Transaction(
         id: DateTime.now().toString(),
@@ -63,6 +77,10 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _userTransaction.add(newTx);
     });
+  }
+
+  void deleteTx(String id) {
+    setState(() {});
   }
 
   void _startAddNewTransaction(BuildContext ctx) {
@@ -94,13 +112,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              child: Card(
-                color: Colors.blue,
-                child: Text('CHART!'),
-                elevation: 5,
-              ),
+            Chart(
+              recentTransactions: _recentTransaction,
             ),
             TransactionList(
               transactions: _userTransaction,
