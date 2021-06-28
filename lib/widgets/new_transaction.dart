@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -16,12 +17,15 @@ class _NewTransactionState extends State<NewTransaction> {
   DateTime _selecteDate;
 
   void _submitdata() {
-    final enteredTitle = _titleController.text;
-    final enteredAmount = double.parse(_amountController.text);
-    if (enteredTitle.isEmpty || enteredAmount <= 0) {
+    if (_amountController.text.isEmpty) {
       return;
     }
-    widget.addtx(enteredTitle, enteredAmount);
+    final enteredTitle = _titleController.text;
+    final enteredAmount = double.parse(_amountController.text);
+    if (enteredTitle.isEmpty || enteredAmount <= 0 || _selecteDate == null) {
+      return;
+    }
+    widget.addtx(enteredTitle, enteredAmount, _selecteDate);
     Navigator.of(context).pop();
   }
 
