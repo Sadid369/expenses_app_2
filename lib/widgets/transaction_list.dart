@@ -1,6 +1,6 @@
 import 'package:expense_app_2/models/transaction.dart';
+import 'package:expense_app_2/widgets/transactions_item.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
@@ -10,53 +10,25 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
+      height: 450,
       child: transactions.isEmpty
-          ? Column(
-              children: [
-                Text('No Transaction'),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                    height: 200,
-                    child: Image.asset('assets/images/waiting.png')),
-              ],
-            )
+          ? LayoutBuilder(builder: (ctx, constrains) {
+              return Column(
+                children: [
+                  Text('No Transaction'),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                      height: constrains.maxHeight * 0.60,
+                      child: Image.asset('assets/images/waiting.png')),
+                ],
+              );
+            })
           : ListView.builder(
               itemBuilder: (ctx, index) {
-                return Card(
-                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                  elevation: 5,
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Theme.of(context).primaryColor,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: FittedBox(
-                          child: Text(
-                            '\$${transactions[index].amount}',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                    title: Text(
-                      transactions[index].title,
-                      style: Theme.of(context).textTheme.title,
-                    ),
-                    subtitle: Text(
-                        DateFormat.yMMMd().format(transactions[index].date)),
-                    trailing: IconButton(
-                      onPressed: () => deleteTx(transactions[index].id),
-                      icon: Icon(
-                        Icons.delete,
-                        color: Theme.of(context).errorColor,
-                      ),
-                    ),
-                  ),
-                );
+                return TransactionItem(
+                    transactions: transactions[index], deleteTx: deleteTx);
               },
               itemCount: transactions.length,
             ),
